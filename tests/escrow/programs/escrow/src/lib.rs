@@ -45,9 +45,20 @@ pub mod escrow {
             .key;
         ctx.accounts.escrow_account.initializer_amount = initializer_amount;
         ctx.accounts.escrow_account.taker_amount = taker_amount;
+        ctx.accounts.escrow_account.taker = None;
+        ctx.accounts.escrow_account.something = None;
 
         let (pda, _bump_seed) = Pubkey::find_program_address(&[b"escrow"], ctx.program_id);
         token::set_authority(ctx.accounts.into(), AuthorityType::AccountOwner, Some(pda))?;
+        Ok(())
+    }
+
+    pub fn update(ctx: Context<Update>, taker: Pubkey, something: u64) -> ProgramResult {
+        let escrow = &mut ctx.accounts.escrow_account;
+
+        escrow.taker = Some(taker);
+        escrow.something = Some(something);
+
         Ok(())
     }
 
@@ -139,6 +150,14 @@ pub struct Exchange<'info> {
 }
 
 #[derive(Accounts)]
+pub struct Update<'info> {
+    #[account(signer)]
+    pub initializer: AccountInfo<'info>,
+    #[account(mut)]
+    pub escrow_account: ProgramAccount<'info, EscrowAccount>,
+}
+
+#[derive(Accounts)]
 pub struct CancelEscrow<'info> {
     pub initializer: AccountInfo<'info>,
     #[account(mut)]
@@ -160,7 +179,9 @@ pub struct EscrowAccount {
     pub initializer_deposit_token_account: Pubkey,
     pub initializer_receive_token_account: Pubkey,
     pub initializer_amount: u64,
+    pub taker: Option<Pubkey>,
     pub taker_amount: u64,
+    pub something: Option<u64>,
 }
 
 impl<'info> From<&mut InitializeEscrow<'info>>

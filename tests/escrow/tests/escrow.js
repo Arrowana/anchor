@@ -1,5 +1,6 @@
 const anchor = require("@project-serum/anchor");
 const { TOKEN_PROGRAM_ID, Token } = require("@solana/spl-token");
+const { Keypair } = require("@solana/web3.js");
 const assert = require("assert");
 
 describe("escrow", () => {
@@ -121,6 +122,27 @@ describe("escrow", () => {
     );
     assert.ok(
       _escrowAccount.initializerReceiveTokenAccount.equals(initializerTokenAccountB)
+    );
+  });
+
+  it("Update escrow", async () => {
+    let takerKeypair = new Keypair()
+    await program.rpc.update(
+      takerKeypair.publicKey,
+      new anchor.BN(1234),
+      {
+      accounts: {
+        initializer: provider.wallet.publicKey,
+        escrowAccount: escrowAccount.publicKey,
+      },
+    });
+
+    let _escrowAccount = await program.account.escrowAccount.fetch(
+      escrowAccount.publicKey
+    );
+
+    assert.ok(
+      _escrowAccount.taker.equals(takerKeypair.publicKey)
     );
   });
 
