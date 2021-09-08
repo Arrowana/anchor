@@ -129,7 +129,7 @@ describe("escrow", () => {
     let takerKeypair = new Keypair()
     await program.rpc.update(
       takerKeypair.publicKey,
-      new anchor.BN(1234),
+      new anchor.BN(87654321),
       {
       accounts: {
         initializer: provider.wallet.publicKey,

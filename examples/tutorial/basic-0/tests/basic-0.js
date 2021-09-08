@@ -8,6 +8,8 @@ describe("basic-0", () => {
     // #region code
     // Read the deployed program from the workspace.
     const program = anchor.workspace.Basic0;
+    console.log(anchor.workspace)
+    console.log('program.programId:', program.programId.toBase58())
 
     // Execute the RPC.
     await program.rpc.initialize();

@@ -13,7 +13,7 @@ async function main() {
   const idl = JSON.parse(require('fs').readFileSync('./target/idl/basic_0.json', 'utf8'));
 
   // Address of the deployed program.
-  const programId = new anchor.web3.PublicKey('<YOUR-PROGRAM-ID>');
+  const programId = new anchor.web3.PublicKey('Fn6B7voF4ps9ycnDar4LBtAs9rwW1UDCqvLtWCemybeQ');
 
   // Generate the program client from IDL.
   const program = new anchor.Program(idl, programId);

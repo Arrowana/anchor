@@ -182,6 +182,8 @@ pub struct EscrowAccount {
     pub taker: Option<Pubkey>,
     pub taker_amount: u64,
     pub something: Option<u64>,
+    pub stuff: [u8; 32],
+    pub time: i64,
 }
 
 impl<'info> From<&mut InitializeEscrow<'info>>
