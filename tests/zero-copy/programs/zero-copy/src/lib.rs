@@ -60,6 +60,10 @@ pub mod zero_copy {
         };
         Ok(())
     }
+
+    pub fn create_zc_bug_account(_ctx: Context<CreateZcBugAccount>) -> Result<()> {
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -187,4 +191,25 @@ impl From<RpcEvent> for Event {
             data: e.data,
         }
     }
+}
+
+#[derive(Accounts)]
+pub struct CreateZcBugAccount<'info> {
+    #[account(
+        init,
+        seeds = [authority.key().as_ref()],
+        bump,
+        payer = authority,
+        space = ZcBug::INIT_SPACE + 8
+    )]
+    zc_bug: AccountLoader<'info, ZcBug>,
+    #[account(mut)]
+    authority: Signer<'info>,
+    system_program: AccountInfo<'info>,
+}
+
+#[account(zero_copy)]
+#[derive(InitSpace)]
+pub struct ZcBug {
+    pub a: u128,
 }
